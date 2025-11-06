@@ -4,6 +4,8 @@ import com.petopia.petopia.Dto.UserRequestDTO;
 import com.petopia.petopia.Dto.UserResponseDTO;
 import com.petopia.petopia.entity.User;
 import com.petopia.petopia.entity.UserDetails;
+import com.petopia.petopia.error.CustomValidationException;
+import com.petopia.petopia.error.ErrorCode;
 import com.petopia.petopia.repository.UserDetailsRepository;
 import com.petopia.petopia.repository.UserRepository;
 import com.petopia.petopia.service.ClientService;
@@ -41,21 +43,35 @@ public class ClientServiceImpl implements ClientService {
         LocalDateTime now = LocalDateTime.now();
         UserDetails userDetails = getUserDetails(userRequestDTO, now);
         userDetailsRepository.save(userDetails);
-        saveUserDetailsInUser(userRequestDTO,userDetails.getId(),now);
+        saveUserDetailsInUser(userRequestDTO,userDetails.getId(),now,2L);
         responseDTO.setUserName(userDetails.getUserName());
         responseDTO.setMessage(PetoPiaConstants.REGISTRATION_SUCCESS_MSG);
         responseDTO.setStatus(true);
         return responseDTO;
     }
 
-    private void saveUserDetailsInUser(UserRequestDTO userDetails, Long id, LocalDateTime now) {
+    @Override
+    public UserResponseDTO getUser(Long userId) {
+
+
+        UserDetails user = userDetailsRepository.findByUserIdAndIsDeletedFalseAndIsActive(userId);
+        if(null == user){
+            throw new CustomValidationException(ErrorCode.CODE_2002);
+        }
+        UserResponseDTO responseDTO = new UserResponseDTO();
+        responseDTO.setUserName(user.getUserName());
+        responseDTO.setEmail(user.getEmail());
+        return responseDTO;
+    }
+
+    private void saveUserDetailsInUser(UserRequestDTO userDetails, Long id, LocalDateTime now,Long roleId) {
 
         User user = new User();
         user.setEmail(userDetails.getEmail());
         user.setUsername(userDetails.getUserName());
         user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         user.setUserId(id);
-        user.setRoleId(PetoPiaConstants.USER_ROLE);
+//        user.setRoleId(PetoPiaConstants.USER_ROLE);
         user.setIsDeleted(false);
         user.setCreatedAt(now);
         userRepository.save(user);

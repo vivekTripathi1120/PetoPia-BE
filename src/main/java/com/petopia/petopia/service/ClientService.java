@@ -6,4 +6,6 @@ import com.petopia.petopia.Dto.UserResponseDTO;
 public interface ClientService {
 
     UserResponseDTO clientRegistration(UserRequestDTO userRequestDTO);
+
+    UserResponseDTO getUser(Long userId);
 }
