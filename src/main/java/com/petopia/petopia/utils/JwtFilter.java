@@ -1,6 +1,7 @@
 package com.petopia.petopia.utils;
 
 import com.mysql.cj.util.StringUtils;
+import com.petopia.petopia.cache.UserCacheDTO;
 import com.petopia.petopia.entity.User;
 import com.petopia.petopia.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -43,9 +44,13 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = requestToken.split("Bearer ")[1];
-        Claims claims = authUtils.getUserNameFromToken(token);
-        String userName = claims.getSubject();
+        String userName;
+        UserCacheDTO userDetails = authUtils.extractUserDetails(request);
+        if(!StringUtils.isNullOrEmpty(userDetails.getEmail())){
+         userName = userDetails.getEmail();
+        }else {
+            userName = userDetails.getUserName();
+        }
 
         if(null != userName && null ==  SecurityContextHolder.getContext().getAuthentication()){
             User user = userRepository.findByUsername(userName);

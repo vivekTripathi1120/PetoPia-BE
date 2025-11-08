@@ -1,4 +1,4 @@
-package com.petopia.petopia.Dto;
+package com.petopia.petopia.cache;
 
 
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class UserCacheDTO {
 
-    private Long id;
+    private Long userId;
     private String userName;
     private String email;
     private Long roleId;

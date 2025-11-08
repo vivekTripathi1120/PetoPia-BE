@@ -4,8 +4,8 @@ public enum ErrorCode implements ErrorHandle{
 
 
     CODE_2001(2001,"Something went wrong..."),
-    CODE_2002(2002,"No User Found...")
-    ;
+    CODE_2002(2002,"No User Found..."),
+    CODE_2003(2003, "Not Authorized to Update this User...");
 
 
     private final int errorCode;

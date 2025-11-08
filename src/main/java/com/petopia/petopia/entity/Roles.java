@@ -22,8 +22,4 @@ public class Roles {
 
     @Column(name = "is_active")
     private Boolean isActive;
-
-    // ✅ Inverse side
-    @OneToOne(mappedBy = "role")
-    private User user;
 }

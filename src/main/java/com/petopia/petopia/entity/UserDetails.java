@@ -43,4 +43,16 @@ public class UserDetails {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "created_by")
+    private String createdBy;
+
+    @Column(name = "updated_by")
+    private String updatedBy;
+
+    @Column(name = "status")
+    private String status;
+
+    @OneToOne(mappedBy = "userDetails", cascade = CascadeType.ALL)
+    private UserAddress userAddress;
+
 }

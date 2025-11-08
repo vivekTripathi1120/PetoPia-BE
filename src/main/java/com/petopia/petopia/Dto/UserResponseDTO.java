@@ -7,9 +7,10 @@ import lombok.Data;
 public class UserResponseDTO {
 
 
+    private Long userId;
     private String userName;
-    private String password;
     private String email;
+    private AddressResponseDTO address;
     private String message;
     private Boolean status;
 }

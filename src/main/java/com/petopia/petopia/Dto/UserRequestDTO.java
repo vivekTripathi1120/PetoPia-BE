@@ -11,4 +11,7 @@ public class UserRequestDTO {
     private String email;
     private String phoneNumber;
     private String name;
+    private Long roleId;
+
+    private UserAddressRequestDTO address;
 }

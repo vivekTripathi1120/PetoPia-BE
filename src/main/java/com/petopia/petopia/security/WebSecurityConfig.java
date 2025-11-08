@@ -16,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @EnableMethodSecurity
 @Configuration
@@ -32,16 +33,22 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+
+        RequestMatcher unsecureMatcher = request ->
+                request.getRequestURI() != null && request.getRequestURI().contains("/unsecure/");
+
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .sessionManagement(sessionConfig ->
                         sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login/generateToken","/unsecure/**").permitAll()
+                        .requestMatchers("/login/generateToken").permitAll()
+                        .requestMatchers(unsecureMatcher).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/owner/**").hasRole("PET_OWNER")
                         .requestMatchers("/service/**").hasRole("PET_SERVICE_PROVIDER")
+                        .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()
 
                 )
